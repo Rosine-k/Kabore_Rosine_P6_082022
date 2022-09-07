@@ -3,9 +3,10 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
 const userRoutes = require('./routes/user');
+const sauceRoutes = require('./routes/sauce');
 const path = require('path');
 
-mongoose.connect('mongodb+srv://Rosizou:<Leslie75018>@cluster0.qoxtth6.mongodb.net/?retryWrites=true&w=majority',
+mongoose.connect('mongodb+srv://Rosizou:Leslie75018@cluster0.qoxtth6.mongodb.net/sauce?retryWrites=true&w=majority',
   { useNewUrlParser: true,
     useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))
@@ -22,7 +23,7 @@ app.use((req, res, next) => {
 
 app.use(bodyParser.json());
 
-app.use('/api/sauces', stuffRoutes);
+app.use('/api/sauces', sauceRoutes);
 app.use('/api/auth', userRoutes);
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
