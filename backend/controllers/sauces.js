@@ -1,6 +1,7 @@
 const Sauce = require('../models/sauce');
 const fs = require('fs');
 
+
 exports.createSauce = (req, res, next) => {
     const sauceObject = JSON.parse(req.body.sauce);
     delete sauceObject._id;
@@ -14,10 +15,10 @@ exports.createSauce = (req, res, next) => {
     });
 
     sauce.save()
-        .then(() => { res.status(201).json({ message: 'Sauce enregistrée !' }) })
+        .then(() => res.status(201).json({ message: 'Sauce enregistrée !' }))
         .catch((error) => {
             console.log("La sauce n'a pas pu être enregistrée / createSauce / sauces.js : " + error);
-            res.status(400).json({ error: "La sauce n'a pas pu être enregistrée" })
+            res.status(400).json({ error: "La sauce n'a pas pu être enregistrée" });
         })
 
 };
@@ -27,12 +28,10 @@ exports.getSauceById = (req, res, next) => {
         _id: req.params.id
     })
         .then((sauces) => { res.status(200).json(sauces) })
-        .catch(
-            (error) => {
+        .catch((error) => {
                 console.log("La sauce ne peut pas être affiché / getSauceById / sauces.js : " + error);
-                res.status(404).json({ error: "La sauce ne peut pas être affiché" })
-            }
-        );
+                res.status(404).json({ error: "La sauce ne peut pas être affiché" });
+        })
 };
 
 exports.modifySauce = (req, res, next) => {
@@ -51,14 +50,11 @@ exports.modifySauce = (req, res, next) => {
                     .then(() => res.status(200).json({ message: 'Sauce modifié!' }))
                     .catch((error) => {
                         console.log("La sauce n'a pas pu être modifié / modifySauce / sauces.js : " + error);
-                        res.status(500).json({ error: "La sauce n'a pas pu être modifié" })
-                    }
-                    );
+                        res.status(500).json({ error: "La sauce n'a pas pu être modifié" });
+                    });
             }
-        }
-        )
+        })
 };
-
 
 exports.deleteSauce = (req, res, next) => {
     Sauce.findOne({ _id: req.params.id })
@@ -76,21 +72,17 @@ exports.deleteSauce = (req, res, next) => {
                 });
             }
         })
-        .catch(error => {
-            console.log("La sauce n'a pas été supprimé/ deleteSauce / sauces.js : " + error),
-                res.status(500).json({ error: "La sauce n'a pas été supprimé" });
+        .catch((error) => {
+            console.log("La sauce n'a pas été supprimé/ deleteSauce / sauces.js : " + error);
+            res.status(500).json({ error: "La sauce n'a pas été supprimé" });
         });
 };
 
 exports.getSauce = (req, res, next) => {
-    Sauce.find().then(
-        (sauces) => {
-            res.status(200).json(sauces);
-        }
-    ).catch(
-        (error) => {
-            console.log("Les sauces n'ont pas pu être affichées / getAllSauce / sauces.js : " + error);
+    Sauce.find()
+       .then(sauces => res.status(200).json(sauces))
+        .catch((error) => {
+            console.log("Les sauces n'ont pas pu être affichées / getSauce / sauces.js : " + error);
             res.status(500).json({ error: "Les sauces n'ont pas pu être affichées" });
-        }
-    );
+        });
 };

@@ -2,11 +2,8 @@ const bcrypt = require('bcrypt');
 
 const jwt = require('jsonwebtoken');
 
-
 const User = require('../models/user');
 
-// TODO : vérifier que l'émail réceptionnée est bien un email
-// TODO : sécurisé le mot de passe. 8 caractères avec chiffre et majuscule
 exports.signup = (req, res, next) => {
 
     const emailValidator =  /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
@@ -32,7 +29,7 @@ exports.signup = (req, res, next) => {
     }
     else {
         console.log("Format du mot de passe incorrect / signup / user.js : " + error);
-        res.status(400).json({message: "Le mot de passe doit contenir 8 caractères comprenant : 1 majuscule, 1 minuscule, 1 chiffre et un caractère"});
+        res.status(400).json({message: "Le mot de passe doit contenir 8 caractères comprenant : 1 majuscule, 1 minuscule et 1 chiffre"});
     }    
 };
 
@@ -54,13 +51,12 @@ exports.login = (req, res, next) => {
                         userId: user._id,
                         token: jwt.sign(
                             { userId: user._id },
-                            'RANDOM_TOKEN_SECRET',
+                            process.env.JWT_TOKEN,
                             { expiresIn: '24h' }
                         )
                     });
                 })
                 .catch((error)=> res.status(500).json({error}))
-                //TODO : le RANDOM_TOKEN_SECRET doit être modifié et dans le .env
 
         })
         .catch(error => res.status(500).json({ error }));
