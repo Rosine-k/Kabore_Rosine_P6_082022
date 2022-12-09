@@ -1,4 +1,8 @@
 # Kabore_Rosine_P6_082022
-P6
+Projet 6 du cursus Developpeur web
+
+Hot Takes: application web de critique des sauces piquantes
+
+
 
 

@@ -4,10 +4,12 @@ const jwt = require('jsonwebtoken');
 
 const User = require('../models/user');
 
+// gestion de l'inscription
 exports.signup = (req, res, next) => {
-
+    // validation du champ de l'email
     const emailValidator =  /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-
+    
+    //validation du champ du mot de passe
     const passwordValidator = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/;
     
     if (passwordValidator.test(req.body.password) || emailValidator.test(req.body.email)){
@@ -33,9 +35,11 @@ exports.signup = (req, res, next) => {
     }    
 };
 
+// gestion de la connexion
 exports.login = (req, res, next) => {
     User.findOne({ email: req.body.email })
         .then(user => {
+            // si l'identifiant n'est pas correct, refus de connexion
             if (!user) {
                 console.log("Utilisateur non trouvé ! / login / user.js ");
                 return res.status(401).json({ error: 'Utilisateur non trouvé !' });
@@ -43,10 +47,12 @@ exports.login = (req, res, next) => {
             bcrypt
                 .compare(req.body.password, user.password)
                 .then(valid => {
+                    // si le mot de passe n'est pas correct, refus de connexion
                     if (!valid) {
                         console.log('Mot de passe incorrect ! / login / user.js');
                         return res.status(401).json({ error: 'Mot de passe incorrect !' });
                     }
+                    // si l'identifiant et le mot de passe sont corrects, autorisation de connexion
                     res.status(200).json({
                         userId: user._id,
                         token: jwt.sign(

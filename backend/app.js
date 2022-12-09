@@ -1,4 +1,5 @@
 require('dotenv').config();
+
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
@@ -6,27 +7,13 @@ const path = require('path');
 const userRoutes = require('./routes/user');
 const sauceRoutes = require('./routes/sauce');
 
+const app = express();
 
-mongoose.connect('mongodb+srv://Rosizou:Leslie75018@cluster0.qoxtth6.mongodb.net/sauce?retryWrites=true&w=majority',
+mongoose.connect('mongodb+srv://' + process.env.BDD_LOGIN + ':'+ process.env.BDD_PASSWORD+'@' + process.env.BDD_URL +'/' + process.env.BDD_NAME + '?retryWrites=true&w=majority',
   { useNewUrlParser: true,
     useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch(() => console.log('Connexion à MongoDB échouée !'));
-
-const app = express();
-
-const rateLimit = require('express-rate-limit');
-
-const passwordLimiter = rateLimit({
-  max: 3,
-  windowMs: 60 * 60 * 1000,
-  message: "Trop de tentatives de connexions sur ce compte, veuillez réessayer plus tard"
-});
-
-app.use(passwordLimiter);
-
-app.get('/login', passwordLimiter, (req, res) => res.send('Tentative de connexion échouée'));
-
 
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
