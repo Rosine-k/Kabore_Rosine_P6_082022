@@ -14,7 +14,7 @@ exports.createSauce = (req, res, next) => {
         usersDisliked: [' '],
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
     });
-
+    
     sauce.save()
         .then(() => res.status(201).json({ message: 'Sauce enregistrée !' }))
         .catch((error) => {
@@ -56,9 +56,11 @@ exports.modifySauce = (req, res, next) => {
     delete sauceObject._userId;
     Sauce.findOne({ _id: req.params.id })
         .then((sauce) => {
+            // si l'utilisateur n'a pas crée la sauce, il n'est pas autorisé à la modifier
             if (sauce.userId != req.auth.userId) {
                 res.status(403).json({ message: 'Non autorisé' });
             } else {
+                // si l'utilisateur a crée la sauce, il est autorisé à la modifier
                 Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
                     .then(() => res.status(200).json({ message: 'Sauce modifié!' }))
                     .catch((error) => {
@@ -73,9 +75,12 @@ exports.modifySauce = (req, res, next) => {
 exports.deleteSauce = (req, res, next) => {
     Sauce.findOne({ _id: req.params.id })
         .then(sauce => {
+            // si l'utilisateur n'a pas crée la sauce, il n'est pas autorisé à la supprimer
             if (sauce.userId != req.auth.userId) {
                 res.status(403).json({ message: 'Non autorisé' });
-            } else {
+            } 
+            // si l'utilisateur a crée la sauce, il est autorisé à la supprimer
+            else {
                 const filename = sauce.imageUrl.split('/images/')[1];
                 fs.unlink(`images/${filename}`, () => {
                     Sauce.deleteOne({ _id: req.params.id })

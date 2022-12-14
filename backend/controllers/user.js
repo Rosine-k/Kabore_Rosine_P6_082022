@@ -6,33 +6,23 @@ const User = require('../models/user');
 
 // gestion de l'inscription
 exports.signup = (req, res, next) => {
-    // validation du champ de l'email
-    const emailValidator =  /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
     
-    //validation du champ du mot de passe
-    const passwordValidator = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/;
-    
-    if (passwordValidator.test(req.body.password) || emailValidator.test(req.body.email)){
-        bcrypt.hash(req.body.password, 10)
+    bcrypt.hash(req.body.password, 10)
         .then(hash => {
-        const user = new User({
-            email: req.body.email,
-            password: hash
-        });
-        user
-            .save()
-            .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
-            .catch((error) => {
-                console.log("Cette adresse email est déjà utilisée / signup / user.js : " + error);
-                res.status(400).json({ error: "Cette adresse email est déjà utilisée." });
-            })
+            const user = new User({
+                email: req.body.email,
+                password: hash
+            });
+            user
+                .save()
+                .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
+                .catch((error) => {
+                    console.log("Cette adresse email est déjà utilisée / signup / user.js : " + error);
+                    res.status(400).json({ error: "Cette adresse email est déjà utilisée." });
+                })
         })
         .catch(error => res.status(500).json({ error }));
-    }
-    else {
-        console.log("Format du mot de passe incorrect / signup / user.js : " + error);
-        res.status(400).json({message: "Le mot de passe doit contenir 8 caractères comprenant : 1 majuscule, 1 minuscule et 1 chiffre"});
-    }    
+        
 };
 
 // gestion de la connexion
