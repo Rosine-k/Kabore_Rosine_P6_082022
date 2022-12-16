@@ -13,6 +13,6 @@ router.get('/:id', auth, saucesCtrl.getSauceById);
 router.post('/', auth, multer, verifChamp, saucesCtrl.createSauce);
 router.post('/:id/like',auth, saucesCtrl.likeSauce);
 router.put('/:id', auth, isOwner,verifChamp, multer, saucesCtrl.modifySauce);
-router.delete('/:id', auth,  isOwner, saucesCtrl.deleteSauce);
+router.delete('/:id', auth, isOwner,  saucesCtrl.deleteSauce);
 
 module.exports = router;

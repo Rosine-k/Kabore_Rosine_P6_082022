@@ -28,8 +28,4 @@ app.use('/api/sauces', sauceRoutes);
 app.use('/api/auth', userRoutes);
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
-// app.use(passwordLimiter);
-
-// app.get('/login', passwordLimiter, (req, res) => res.send('Tentative de connexion échouée'));
-
 module.exports = app;

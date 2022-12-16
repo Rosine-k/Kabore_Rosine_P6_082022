@@ -14,7 +14,7 @@ exports.createSauce = (req, res, next) => {
         usersDisliked: [' '],
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
     });
-    
+
     sauce.save()
         .then(() => res.status(201).json({ message: 'Sauce enregistrée !' }))
         .catch((error) => {
@@ -56,48 +56,35 @@ exports.modifySauce = (req, res, next) => {
     delete sauceObject._userId;
     Sauce.findOne({ _id: req.params.id })
         .then((sauce) => {
-            // si l'utilisateur n'a pas crée la sauce, il n'est pas autorisé à la modifier
-            if (sauce.userId != req.auth.userId) {
-                res.status(403).json({ message: 'Non autorisé' });
-            } else {
-                // si l'utilisateur a crée la sauce, il est autorisé à la modifier
-                Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
-                    .then(() => res.status(200).json({ message: 'Sauce modifié!' }))
-                    .catch((error) => {
-                        console.log("La sauce n'a pas pu être modifié / modifySauce / sauces.js : " + error);
-                        res.status(500).json({ error: "La sauce n'a pas pu être modifié" });
-                    });
-            }
+            // si l'utilisateur a crée la sauce, il est autorisé à la modifier
+            Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
+                .then(() => res.status(200).json({ message: 'Sauce modifié!' }))
+                .catch((error) => {
+                    console.log("La sauce n'a pas pu être modifié / modifySauce / sauces.js : " + error);
+                    res.status(500).json({ error: "La sauce n'a pas pu être modifié" });
+                });
         })
+        .catch((error) => {
+            console.log("La sauce n'a pas été trouvé : " + error);
+            res.status(500).json({ error: "La sauce n'a pas été trouvé" });
+        });
 };
 
 // gestion de la suppression des sauces
 exports.deleteSauce = (req, res, next) => {
     Sauce.findOne({ _id: req.params.id })
         .then(sauce => {
-            // si l'utilisateur n'a pas crée la sauce, il n'est pas autorisé à la supprimer
-            if (sauce.userId != req.auth.userId) {
-                res.status(403).json({ message: 'Non autorisé' });
-            } 
-            // si l'utilisateur a crée la sauce, il est autorisé à la supprimer
-            else {
-                const filename = sauce.imageUrl.split('/images/')[1];
-                fs.unlink(`images/${filename}`, () => {
-                    Sauce.deleteOne({ _id: req.params.id })
-                        .then(() => { res.status(200).json({ message: 'Sauce supprimée !' }) })
-                        .catch(error =>
-                            console.log("La sauce n'a pas pu être supprimé / deleteSauce / sauces.js : " + error),
-                            res.status(500).json({ error: "La sauce n'a pas pu être supprimé" }));
-                });
-            }
+            const filename = sauce.imageUrl.split('/images/')[1];
+            fs.unlink(`images/${filename}`, () => {
+                Sauce.deleteOne({ _id: req.params.id })
+                    .then(() => res.status(200).json({ message: 'Sauce supprimé!' }))
+            });
         })
         .catch((error) => {
             console.log("La sauce n'a pas été supprimé/ deleteSauce / sauces.js : " + error);
             res.status(500).json({ error: "La sauce n'a pas été supprimé" });
         });
 };
-
-
 
 // gestion des likes et dislikes
 exports.likeSauce = (req, res, next) => {
@@ -146,7 +133,6 @@ exports.likeSauce = (req, res, next) => {
                     })
                         .then(() => res.status(200).json({ message: "Dislike retiré" }))
                         .catch((error) => res.status(400).json({ error }))
-
                 }
             })
             .catch((error) => res.status(400).json({ error }))

@@ -5,12 +5,12 @@ module.exports = (req, res, next) => {
         const textValidator = /^[a-zA-Z0-9]*$/;
         
         // si le nom, la marque, la description et les ingrédients sont conformes au format, la création de sauce est possible
-        if (textValidator.test(req.body.name) || textValidator.test(req.body.manufacturer) || textValidator.test(req.body.description || textValidator.test(req.body.mainPepper))) {
+        if (textValidator.test(req.body.name) && textValidator.test(req.body.manufacturer) && textValidator.test(req.body.description) &&  textValidator.test(req.body.mainPepper)) {
             next();
         }
         else {
             // erreur: la création de sauce n'est pas possible car les champs sont incorrects
-            console.log("Format des champs incorrects / verif-champ.js : " + error);
+            console.log("Format des champs incorrects / verif-champ.js  ");
             res.status(400).json({message: "Format des champs incorrects"});
         }
         
