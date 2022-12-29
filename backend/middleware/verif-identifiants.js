@@ -6,7 +6,7 @@ module.exports = (req, res, next) => {
         //validation du champ du mot de passe
         const passwordValidator = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/;
 
-       // si le mot de passe et l'email sont aux bons formats, la création de compte est possible
+       // si le format du mot de passe et l'email est correct, la création de compte est possible
        if (passwordValidator.test(req.body.password) || emailValidator.test(req.body.email)) {
           next();
         }
@@ -15,8 +15,9 @@ module.exports = (req, res, next) => {
             console.log("Format du mot de passe incorrect / verif-identifiants.js : " + error);
             res.status(400).json({message: "Le mot de passe doit contenir 8 caractères comprenant : 1 majuscule, 1 minuscule et 1 chiffre"});
         } 	   
-    } catch(error) {
-         console.log(error);
-        res.status(401).json({ error });
+    } 
+    catch(error) {
+     console.log(error);
+     res.status(401).json({ error });
     }
- };
+};
