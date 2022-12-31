@@ -8,17 +8,21 @@ Pour utiliser l'application, veuillez suivre ces étapes:
 
 BACKEND:
 1. Clonez le repository https://github.com/Rosine-k/Kabore_Rosine_P6_082022
-2. Ouvrez le terminal du dossier backend et lancer les commandes : npm install, npm run start puis nodemon
-
+2. Ouvrez le terminal du dossier backend et lancer les commandes : npm install, nodemon
 
 MONGO DB:
 Crée un fichier .env en entrant les informations de connexion suivantes (compte utilisateur) :
 
 JWT_TOKEN="fgh54dxf6g4'('gfd4fg"
+
 PORT=3000
+
 BDD_LOGIN='UserHT'
+
 BDD_PASSWORD='Identification2022'
+
 BDD_URL='cluster0.qoxtth6.mongodb.net'
+
 BDD_NAME='sauce'
 
 

@@ -108,7 +108,7 @@ exports.likeSauce = (req, res, next) => {
             .then((sauce) => {
                 if (!sauce.usersDisliked.includes(req.auth.userId)) {
                     Sauce.updateOne({ _id: req.params.id }, {
-                        $inc: { dislikes: -1 },
+                        $inc: { dislikes: +1 },
                         $push: { usersDisliked: req.auth.userId }
                     })
                         .then(() => res.status(200).json({ message: "Sauce disliké" }))
